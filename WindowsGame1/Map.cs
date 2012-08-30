@@ -63,7 +63,7 @@ namespace WindowsGame1
 
                     tilemap[j, i] =  (int)(1.0*tilemap[j,i]/octtotal*256);
 
-                    tilemap[j, i] -= 1;
+                    tilemap[j, i] -= j/10;
 
 
                     if (tilemap[j, i] < caves) tilemap[j, i] = 0;
