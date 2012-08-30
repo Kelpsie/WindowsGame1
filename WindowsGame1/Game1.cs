@@ -28,7 +28,7 @@ namespace WindowsGame1
         Double roughness;
         int seed;
         int size;
-        int dunnowhattocallthis;
+        int caves;
 
         Planet planet;
 
@@ -66,7 +66,7 @@ namespace WindowsGame1
             roughness = 1.5;
             seed = 0;
             size = 1;
-            dunnowhattocallthis = 100;
+            caves = 100;
             planet = new Planet(1536*size, seed, roughness);
 
             base.Initialize();
@@ -90,7 +90,7 @@ namespace WindowsGame1
         /// </summary>
         protected override void UnloadContent()
         {
-            // TODO: Unload any non ContentManager content here
+            // TODO: Unload any ghjnon ContentManager content here
         }
 
         /// <summary>
@@ -106,20 +106,18 @@ namespace WindowsGame1
             if (keyboard.IsKeyDown(Keys.Escape))
                 this.Exit();
 
-            if (keyboard.IsKeyDown(Keys.A)  && old_keyboard.IsKeyUp(Keys.A))  seed -= 1;
+            if (keyboard.IsKeyDown(Keys.A)  && old_keyboard.IsKeyUp(Keys.A) && seed > 0)  seed -= 1;
             if (keyboard.IsKeyDown(Keys.D) && old_keyboard.IsKeyUp(Keys.D)) seed += 1;
             if (keyboard.IsKeyDown(Keys.W)     && old_keyboard.IsKeyUp(Keys.W) && size < 6)  size += 1;
             if (keyboard.IsKeyDown(Keys.S)     && old_keyboard.IsKeyUp(Keys.S) && size > 1)  size -= 1;
-            //if (keyboard.IsKeyDown(Keys.A)) seed += 1;
-            //if (keyboard.IsKeyDown(Keys.D)) seed -= 1;
             if (keyboard.IsKeyDown(Keys.Q)) roughness -= 0.1;
             if (keyboard.IsKeyDown(Keys.E)) roughness += 0.1;
-            if (keyboard.IsKeyDown(Keys.Down)) dunnowhattocallthis -= 1;
-            if (keyboard.IsKeyDown(Keys.Up)) dunnowhattocallthis += 1;
+            if (keyboard.IsKeyDown(Keys.Down) && caves > 0) caves -= 1;
+            if (keyboard.IsKeyDown(Keys.Up)) caves += 1;
             if (keyboard.IsKeyDown(Keys.Enter))
             {
                 planet = new Planet(1536 * size, seed, roughness);
-                planet.map.generateWorld(dunnowhattocallthis);
+                planet.map.generateWorld(caves);
             }
 
             old_keyboard = keyboard;
@@ -155,7 +153,7 @@ namespace WindowsGame1
             spriteBatch.DrawString(font, "A/D Seed: " + seed.ToString(), new Vector2(0, 0), Color.White);
             spriteBatch.DrawString(font, "Q/E Roughness: " + roughness.ToString(), new Vector2(0, 20), Color.White);
             spriteBatch.DrawString(font, "W/S Size: " + size.ToString(), new Vector2(0, 40), Color.White);
-            spriteBatch.DrawString(font, "Up/Down Caves: " + dunnowhattocallthis.ToString(), new Vector2(0, 60), Color.White);
+            spriteBatch.DrawString(font, "Up/Down Caves: " + caves.ToString(), new Vector2(0, 60), Color.White);
             
             spriteBatch.End();
             base.Draw(gameTime);

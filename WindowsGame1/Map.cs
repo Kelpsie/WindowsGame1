@@ -39,7 +39,7 @@ namespace WindowsGame1
             }
             generateWorld(100);
         }
-        public void generateWorld(int dunnowhattocallthis)
+        public void generateWorld(int caves)
         {
             for (int i = 0; i < tilemap.GetUpperBound(1); i++)
             {
