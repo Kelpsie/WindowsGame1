@@ -177,7 +177,7 @@ namespace WindowsGame1
             spriteBatch.DrawString(font, "A/D Seed: " + seed.ToString(), new Vector2(0, 0), Color.White);
             spriteBatch.DrawString(font, "Q/E Roughness: " + roughness.ToString(), new Vector2(0, 20), Color.White);
             spriteBatch.DrawString(font, "W/S Size: " + (size * 1536).ToString(), new Vector2(0, 40), Color.White);
-            spriteBatch.DrawString(font, "Up/Down Caves: " + caves.ToString(), new Vector2(0, 60), Color.White);
+            spriteBatch.DrawString(font, "1/3 Caves: " + caves.ToString(), new Vector2(0, 60), Color.White);
             spriteBatch.DrawString(font, "+/- Zoom: " + zoom.ToString(), new Vector2(0, 80), Color.White);
             
             if (refreshWorld)
