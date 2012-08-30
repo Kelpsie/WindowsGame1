@@ -28,7 +28,9 @@ namespace WindowsGame1
         Double roughness;
         int seed;
         int size;
-        int dunnowhattocallthis;
+        int caves;
+        int zoom;
+        Vector2 pos;
 
         Planet planet;
 
@@ -53,22 +55,23 @@ namespace WindowsGame1
             tracedSize = GraphicsDevice.PresentationParameters.Bounds;
             canvas = new Texture2D(GraphicsDevice, tracedSize.Width, tracedSize.Height, false, SurfaceFormat.Color);
             rnd = new Random();
-            buffer = new RenderTarget2D(
-                GraphicsDevice,
-                GraphicsDevice.PresentationParameters.BackBufferWidth,
-                GraphicsDevice.PresentationParameters.BackBufferHeight,
-                false,
-                GraphicsDevice.PresentationParameters.BackBufferFormat,
-                DepthFormat.Depth24);
 
             old_keyboard = new KeyboardState();
 
+            pos = Vector2.Zero;
             roughness = 1.5;
             seed = 0;
             size = 1;
-            dunnowhattocallthis = 100;
-            planet = new Planet(1536*size, seed, roughness);
+            caves = 50;
+            zoom = 1;
+            planet = new Planet(1536 * size, seed, roughness);
 
+            buffer = new RenderTarget2D(
+                GraphicsDevice, planet.size, planet.map.tilemap.GetUpperBound(0), false,
+                GraphicsDevice.PresentationParameters.BackBufferFormat,
+                DepthFormat.Depth24);
+
+            planet.map.generateWorld(caves);
             base.Initialize();
         }
 
@@ -108,18 +111,24 @@ namespace WindowsGame1
 
             if (keyboard.IsKeyDown(Keys.A)  && old_keyboard.IsKeyUp(Keys.A))  seed -= 1;
             if (keyboard.IsKeyDown(Keys.D) && old_keyboard.IsKeyUp(Keys.D)) seed += 1;
-            if (keyboard.IsKeyDown(Keys.W)     && old_keyboard.IsKeyUp(Keys.W) && size < 6)  size += 1;
-            if (keyboard.IsKeyDown(Keys.S)     && old_keyboard.IsKeyUp(Keys.S) && size > 1)  size -= 1;
-            //if (keyboard.IsKeyDown(Keys.A)) seed += 1;
-            //if (keyboard.IsKeyDown(Keys.D)) seed -= 1;
+            if (keyboard.IsKeyDown(Keys.W) && old_keyboard.IsKeyUp(Keys.W) && size < 6) size += 1;
+            if (keyboard.IsKeyDown(Keys.S) && old_keyboard.IsKeyUp(Keys.S) && size > 1) size -= 1;
+            if (keyboard.IsKeyDown(Keys.OemPlus) && old_keyboard.IsKeyUp(Keys.OemPlus)) zoom += 1;
+            if (keyboard.IsKeyDown(Keys.OemMinus) && old_keyboard.IsKeyUp(Keys.OemMinus) && zoom > 1) zoom -= 1;
             if (keyboard.IsKeyDown(Keys.Q)) roughness -= 0.1;
             if (keyboard.IsKeyDown(Keys.E)) roughness += 0.1;
-            if (keyboard.IsKeyDown(Keys.Down)) dunnowhattocallthis -= 1;
-            if (keyboard.IsKeyDown(Keys.Up)) dunnowhattocallthis += 1;
+            if (keyboard.IsKeyDown(Keys.D1)) caves -= 1;
+            if (keyboard.IsKeyDown(Keys.D3)) caves += 1;
+
+            if (keyboard.IsKeyDown(Keys.Up)) pos.Y -= 1;
+            if (keyboard.IsKeyDown(Keys.Down)) pos.Y += 1;
+            if (keyboard.IsKeyDown(Keys.Left)) pos.X -= 1;
+            if (keyboard.IsKeyDown(Keys.Right)) pos.X += 1;
+
             if (keyboard.IsKeyDown(Keys.Enter))
             {
                 planet = new Planet(1536 * size, seed, roughness);
-                planet.map.generateWorld(dunnowhattocallthis);
+                planet.map.generateWorld(caves);
             }
 
             old_keyboard = keyboard;
@@ -140,7 +149,7 @@ namespace WindowsGame1
             //draw some stuff.
 
             if (keyboard.IsKeyDown(Keys.Space))
-                planet.map.drawWorld(spriteBatch, tracedSize);
+                planet.map.drawWorld(spriteBatch, tracedSize, pos, zoom);
 
             spriteBatch.End();
 
@@ -148,14 +157,16 @@ namespace WindowsGame1
             //GraphicsDevice.Clear(Color.Blue);
 
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Opaque);
-            spriteBatch.Draw(buffer, Vector2.Zero, Color.White);
+            GraphicsDevice.Clear(Color.Transparent);
+            spriteBatch.Draw(buffer, pos, Color.White);
 
             planet.drawCircle(spriteBatch, tracedSize);
-            planet.map.drawLine(spriteBatch, tracedSize);
+            planet.map.drawLine(spriteBatch, tracedSize, pos);
             spriteBatch.DrawString(font, "A/D Seed: " + seed.ToString(), new Vector2(0, 0), Color.White);
             spriteBatch.DrawString(font, "Q/E Roughness: " + roughness.ToString(), new Vector2(0, 20), Color.White);
             spriteBatch.DrawString(font, "W/S Size: " + size.ToString(), new Vector2(0, 40), Color.White);
-            spriteBatch.DrawString(font, "Up/Down Caves: " + dunnowhattocallthis.ToString(), new Vector2(0, 60), Color.White);
+            spriteBatch.DrawString(font, "Up/Down Caves: " + caves.ToString(), new Vector2(0, 60), Color.White);
+            spriteBatch.DrawString(font, "+/- Zoom: " + zoom.ToString(), new Vector2(0, 80), Color.White);
             
             spriteBatch.End();
             base.Draw(gameTime);

@@ -37,54 +37,67 @@ namespace WindowsGame1
                 heightMap.Add(w+y + 100);
                 if (i % 768 == 0) d *= -1;
             }
-            generateWorld(100);
         }
-        public void generateWorld(int dunnowhattocallthis)
+        public void generateWorld(int caves)
         {
+            Random rng = new Random(parent.seed);
             for (int i = 0; i < tilemap.GetUpperBound(1); i++)
             {
                 for (int j = 0; j < tilemap.GetUpperBound(0); j++)
                 {
-                    if (heightMap[i] > j) { tilemap[j, i] = 0; continue; }
-                    tilemap[j, i] = (int)(Math.Abs(SimplexNoise.noise(
-                        (float)(1.0 * i / tilemap.GetUpperBound(1)*30), 
-                        (float)(1.0 * j / tilemap.GetUpperBound(0)*30),
-                        parent.seed)) * 256);
+                    
+                    int octaves = 5;
+                    int octtotal = 0;
 
-                    //tilemap[j, i] = tilemap[j, i] + (int)(Math.Pow((0.001 * (tilemap.GetUpperBound(0)-j)), 2));
-                    //tilemap[j, i] = tilemap[j, i] - (int)(Math.Pow((0.05 * j), 2));
+                    tilemap[j, i] = 0;
+                    if (heightMap[i] > j) { continue; }
 
-                    if (j > tilemap.GetUpperBound(0)-200) tilemap[j, i] /= 4;
-                    if (j == heightMap[i]) tilemap[j, i] = 0;
-                    if (tilemap[j, i] < 50) tilemap[j, i] = 0;
-                    if (tilemap[j, i] >= 50) tilemap[j, i] = 256;
+                    for (int k = 1; k < octaves+1; k++)
+                    {
+                        tilemap[j, i] += (int)(Math.Abs(SimplexNoise.noise(
+                                                (float)(1.0 * i / tilemap.GetUpperBound(1) * 10*Math.Pow(2, k-1)),
+                                                (float)(1.0 * j / tilemap.GetUpperBound(0) * 10*Math.Pow(2, k-1)),
+                                                parent.seed)) * (256/k));
+                        octtotal += 256 / k;
+                    }
+
+                    tilemap[j, i] =  (int)(1.0*tilemap[j,i]/octtotal*256);
+
+                    tilemap[j, i] -= j/10;
+
+
+                    if (tilemap[j, i] < caves) tilemap[j, i] = 0;
+                    if (tilemap[j, i] >= caves) tilemap[j, i] = 256;
+
                 }
             }
-
         }
-        public void drawLine(SpriteBatch spriteBatch, Rectangle tracedSize)
+
+
+        public void drawLine(SpriteBatch spriteBatch, Rectangle tracedSize, Vector2 pos)
         {
             for (int i = 0; i < heightMap.Count(); i++)
             {
                 //SpriteBatchHelper.DrawRectangle(spriteBatch, new Rectangle(i, planet.map.heightMap[i], 1, 1), Color.White);
                 SpriteBatchHelper.DrawRectangle(spriteBatch,
-                    new Rectangle(i, heightMap[i], 1, 1),
+                    new Rectangle((int)(i+pos.X), (int)(heightMap[i]+pos.Y), 1, 1),
                     Color.White);
             }
         }
-        public void drawWorld(SpriteBatch spriteBatch, Rectangle tracedSize)
+        public void drawWorld(SpriteBatch spriteBatch, Rectangle tracedSize, Vector2 pos, int zoom)
         {
 
-
-            for (int i = 0; i < tilemap.GetUpperBound(1); i++)
+            for (int i = 0; i < tilemap.GetUpperBound(1)/zoom; i++)
             {
-                for (int j = 0; j < tilemap.GetUpperBound(0); j++)
+                for (int j = 0; j < tilemap.GetUpperBound(0)/zoom; j++)
                 {
+                    if ((i - pos.X) > tilemap.GetUpperBound(1) || (i - pos.X) < 0) continue;
+                    if ((j - pos.Y) > tilemap.GetUpperBound(0) || (j - pos.Y) < 0) continue;
                     SpriteBatchHelper.DrawRectangle(spriteBatch,
-                        new Rectangle(i, j, 1, 1),
-                        new Color(tilemap[j, i], tilemap[j, i], tilemap[j, i]));
+                        new Rectangle(i*zoom, j*zoom, zoom, zoom),
+                        new Color(tilemap[(int)(j-pos.Y), (int)(i-pos.X)], tilemap[(int)(j-pos.Y), (int)(i-pos.X)], tilemap[(int)(j-pos.Y), (int)(i-pos.X)]));
                 }
             }
-        }
+        } 
     }
 }
