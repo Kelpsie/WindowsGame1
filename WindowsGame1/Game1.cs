@@ -31,7 +31,6 @@ namespace WindowsGame1
         int caves;
         int zoom;
         Vector2 pos;
-
         Planet planet;
 
         public Game1()
@@ -62,6 +61,8 @@ namespace WindowsGame1
             roughness = 1.5;
             seed = 0;
             size = 1;
+            caves = 100;
+            planet = new Planet(1536*size, seed, roughness);
             caves = 50;
             zoom = 1;
             planet = new Planet(1536 * size, seed, roughness);
@@ -93,7 +94,7 @@ namespace WindowsGame1
         /// </summary>
         protected override void UnloadContent()
         {
-            // TODO: Unload any non ContentManager content here
+            // TODO: Unload any ghjnon ContentManager content here
         }
 
         /// <summary>
@@ -109,8 +110,14 @@ namespace WindowsGame1
             if (keyboard.IsKeyDown(Keys.Escape))
                 this.Exit();
 
-            if (keyboard.IsKeyDown(Keys.A)  && old_keyboard.IsKeyUp(Keys.A))  seed -= 1;
+            if (keyboard.IsKeyDown(Keys.A)  && old_keyboard.IsKeyUp(Keys.A) && seed > 0)  seed -= 1;
             if (keyboard.IsKeyDown(Keys.D) && old_keyboard.IsKeyUp(Keys.D)) seed += 1;
+            if (keyboard.IsKeyDown(Keys.W)     && old_keyboard.IsKeyUp(Keys.W) && size < 6)  size += 1;
+            if (keyboard.IsKeyDown(Keys.S)     && old_keyboard.IsKeyUp(Keys.S) && size > 1)  size -= 1;
+            if (keyboard.IsKeyDown(Keys.Q)) roughness -= 0.1;
+            if (keyboard.IsKeyDown(Keys.E)) roughness += 0.1;
+            if (keyboard.IsKeyDown(Keys.Down) && caves > 0) caves -= 1;
+            if (keyboard.IsKeyDown(Keys.Up)) caves += 1;
             if (keyboard.IsKeyDown(Keys.W) && old_keyboard.IsKeyUp(Keys.W) && size < 6) size += 1;
             if (keyboard.IsKeyDown(Keys.S) && old_keyboard.IsKeyUp(Keys.S) && size > 1) size -= 1;
             if (keyboard.IsKeyDown(Keys.OemPlus) && old_keyboard.IsKeyUp(Keys.OemPlus)) zoom += 1;
