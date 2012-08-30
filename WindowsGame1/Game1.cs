@@ -111,7 +111,7 @@ namespace WindowsGame1
             if (keyboard.IsKeyDown(Keys.Escape))
                 this.Exit();
 
-            if (keyboard.IsKeyDown(Keys.A)  && old_keyboard.IsKeyUp(Keys.A))  seed -= 1;
+            if (keyboard.IsKeyDown(Keys.A)  && old_keyboard.IsKeyUp(Keys.A) && seed > 0)  seed -= 1;
             if (keyboard.IsKeyDown(Keys.D) && old_keyboard.IsKeyUp(Keys.D)) seed += 1;
             if (keyboard.IsKeyDown(Keys.W) && old_keyboard.IsKeyUp(Keys.W) && size < 32) size *= 2;
             if (keyboard.IsKeyDown(Keys.S) && old_keyboard.IsKeyUp(Keys.S) && size > 1) size /= 2;
