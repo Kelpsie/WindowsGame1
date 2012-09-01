@@ -60,10 +60,10 @@ namespace WindowsGame1
             old_keyboard = new KeyboardState();
 
             pos = Vector2.Zero;
-            roughness = 1.5;
+            roughness = 3;
             seed = 0;
-            size = 1;
-            caves = 50;
+            size = 2;
+            caves = 60;
             zoom = 1;
             refreshWorld = false;
             planet = new Planet(1536 * size, seed, roughness);
@@ -171,14 +171,20 @@ namespace WindowsGame1
             GraphicsDevice.Clear(Color.Transparent);
             spriteBatch.Draw(buffer, pos, Color.White);
 
-            planet.drawCircle(spriteBatch, tracedSize);
-            planet.map.drawLine(spriteBatch, tracedSize, pos);
+            if (keyboard.IsKeyUp(Keys.Space))
+            {
+                planet.drawCircle(spriteBatch, tracedSize);
+                planet.map.drawLine(spriteBatch, tracedSize, pos);
+                spriteBatch.DrawString(font, "Press Enter to refresh the map", new Vector2(400, 0), Color.White);
+                spriteBatch.DrawString(font, "Hold Spacebar to render the cavesystem", new Vector2(400, 20), Color.White);
+            }
 
             spriteBatch.DrawString(font, "A/D Seed: " + seed.ToString(), new Vector2(0, 0), Color.White);
             spriteBatch.DrawString(font, "Q/E Roughness: " + roughness.ToString(), new Vector2(0, 20), Color.White);
             spriteBatch.DrawString(font, "W/S Size: " + (size * 1536).ToString(), new Vector2(0, 40), Color.White);
             spriteBatch.DrawString(font, "1/3 Caves: " + caves.ToString(), new Vector2(0, 60), Color.White);
             spriteBatch.DrawString(font, "+/- Zoom: " + zoom.ToString(), new Vector2(0, 80), Color.White);
+
             
             if (refreshWorld)
                 spriteBatch.DrawString(font, "Refreshing world...", new Vector2(256, 300), Color.White);

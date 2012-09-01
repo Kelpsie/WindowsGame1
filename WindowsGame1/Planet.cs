@@ -13,6 +13,7 @@ namespace WindowsGame1
         public int size;
         public Double roughness;
         public int seed;
+        public int sky;
         public List<int> circlePointsX;
         public List<int> circlePointsY;
 
@@ -24,6 +25,7 @@ namespace WindowsGame1
             map = new Map(this);
             map.generateHeights();
             generateCirclePoints();
+            sky = 20;
             //if map already exists;
             //map = new Map(); 
             //Use Map constructor overload to load map, rather than create
@@ -37,8 +39,8 @@ namespace WindowsGame1
             for (int i = 0; i < map.heightMap.Count(); i++)
             {
 
-                cx = (int)(Math.Cos((1.0 * i / 1536) * Math.PI * 2) * (map.heightMap[i]+256) / 768 / 2 * size);
-                cy = (int)(Math.Sin((1.0 * i / 1536) * Math.PI * 2) * (map.heightMap[i]+256) / 768 / 2 * size);
+                cx = (int)(Math.Cos((1.0 * i / size) * Math.PI * 2) * (map.heightMap[i]+256) / size * size);
+                cy = (int)(Math.Sin((1.0 * i / size) * Math.PI * 2) * (map.heightMap[i]+256) / size * size);
                 circlePointsX.Add(cx);
                 circlePointsY.Add(cy);
 
