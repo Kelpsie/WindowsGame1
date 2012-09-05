@@ -22,7 +22,6 @@ namespace WindowsGame1
         Rectangle tracedSize;
         KeyboardState keyboard;
         KeyboardState old_keyboard;
-        Random rnd;
         RenderTarget2D buffer;
         SpriteFont font;
         Double roughness;
@@ -55,14 +54,13 @@ namespace WindowsGame1
             // TODO: Add your initialization logic here
             tracedSize = GraphicsDevice.PresentationParameters.Bounds;
             canvas = new Texture2D(GraphicsDevice, tracedSize.Width, tracedSize.Height, false, SurfaceFormat.Color);
-            rnd = new Random();
 
             old_keyboard = new KeyboardState();
 
             pos = Vector2.Zero;
             roughness = 3;
             seed = 0;
-            size = 2;
+            size = 1;
             caves = 60;
             zoom = 1;
             refreshWorld = false;
@@ -111,7 +109,7 @@ namespace WindowsGame1
             if (keyboard.IsKeyDown(Keys.Escape))
                 this.Exit();
 
-            if (keyboard.IsKeyDown(Keys.A)  && old_keyboard.IsKeyUp(Keys.A) && seed > 0)  seed -= 1;
+            if (keyboard.IsKeyDown(Keys.A)  && old_keyboard.IsKeyUp(Keys.A))  seed -= 1;
             if (keyboard.IsKeyDown(Keys.D) && old_keyboard.IsKeyUp(Keys.D)) seed += 1;
             if (keyboard.IsKeyDown(Keys.W) && old_keyboard.IsKeyUp(Keys.W) && size < 32) size *= 2;
             if (keyboard.IsKeyDown(Keys.S) && old_keyboard.IsKeyUp(Keys.S) && size > 1) size /= 2;

@@ -47,7 +47,7 @@ namespace WindowsGame1
                 {
                     if (heightMap[i] > j) { continue; }
                     
-                    int octaves = 4;
+                    int octaves = 12;
                     int octtotal = 0;
 
                     tilemap[j, i] = 0;
@@ -56,7 +56,7 @@ namespace WindowsGame1
                     {
                         tilemap[j, i] += (int)(Math.Abs(SimplexNoise.noise(
                                                 (float)(1.0 * i / 1536 * 10*Math.Pow(2, k-1)),
-                                                (float)(1.0 * j / 1536*3.5 * 10*Math.Pow(2, k-1)),
+                                                (float)(1.0 * j / (1536/3.5) * 10*Math.Pow(2, k-1)),
                                                 parent.seed)) * (256/k));
                         octtotal += 256 / k;
                     }
@@ -122,7 +122,7 @@ namespace WindowsGame1
             else if (tilemap[y, x] < caves)
                 for (int i = 0; i <= born.GetUpperBound(0); i++)
                 {
-                    if (alive != born[i]) break;
+                    if (alive != born[i]) continue;
                     arr[y, x] = 256;
                 }
         }
@@ -150,7 +150,7 @@ namespace WindowsGame1
 
                     SpriteBatchHelper.DrawRectangle(spriteBatch,
                         new Rectangle(i * zoom, j * zoom + parent.sky*2, zoom, zoom),
-                        new Color(tilemap[(int)(j - pos.Y), (int)(i - pos.X)], tilemap[(int)(j - pos.Y), (int)(i - pos.X)], tilemap[(int)(j - pos.Y), (int)(i - pos.X)]));
+                        new Color(tilemap[(int)(j - pos.Y), (int)(i + pos.X)], tilemap[(int)(j - pos.Y), (int)(i + pos.X)], tilemap[(int)(j - pos.Y), (int)(i + pos.X)]));
                 }
             }
         } 
